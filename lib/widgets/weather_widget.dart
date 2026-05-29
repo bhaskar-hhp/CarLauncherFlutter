@@ -45,12 +45,9 @@ class _WeatherWidgetState extends State<WeatherWidget> {
           _temperature = '${temp?.round() ?? '--'}°';
           _condition = _weatherCodeToCondition(code);
           _icon = _weatherCodeToIcon(code);
-        }
+        });
       }
     } catch (_) { }
-    } catch (_) {
-      if (mounted) setState(() => _loading = false);
-    }
   }
 
   String _weatherCodeToCondition(int code) {
