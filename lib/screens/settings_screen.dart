@@ -211,7 +211,8 @@ class SettingsScreen extends StatelessWidget {
           Switch.adaptive(
             value: settings.isDarkMode,
             onChanged: (_) => settings.toggleDarkMode(),
-            activeColor: accent,
+            activeTrackColor: accent,
+            activeThumbColor: accent,
           ),
         ],
       ),
@@ -270,7 +271,8 @@ class SettingsScreen extends StatelessWidget {
           Switch.adaptive(
             value: true,
             onChanged: null,
-            activeColor: accent,
+            activeTrackColor: accent,
+            activeThumbColor: accent,
           ),
         ],
       ),

@@ -22,7 +22,6 @@ class _WeatherWidgetState extends State<WeatherWidget> {
   String _temperature = '--';
   String _condition = '';
   String _icon = '☀️';
-  bool _loading = true;
 
   @override
   void initState() {
@@ -46,9 +45,9 @@ class _WeatherWidgetState extends State<WeatherWidget> {
           _temperature = '${temp?.round() ?? '--'}°';
           _condition = _weatherCodeToCondition(code);
           _icon = _weatherCodeToIcon(code);
-          _loading = false;
-        });
+        }
       }
+    } catch (_) { }
     } catch (_) {
       if (mounted) setState(() => _loading = false);
     }
