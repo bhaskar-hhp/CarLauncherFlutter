@@ -6,9 +6,9 @@ import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
-import android.os.Bundle
 import android.util.Log
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 class MediaSessionHandler(private val context: Context) {
@@ -45,9 +45,6 @@ class MediaSessionHandler(private val context: Context) {
             controllers.removeAll { it.transportControls == null }
             updateFromBestController()
         }
-        override fun onSessionEvent(event: String?, extras: Bundle?) {
-            emitState()
-        }
     }
 
     fun start() {
@@ -75,7 +72,7 @@ class MediaSessionHandler(private val context: Context) {
         eventSink = null
     }
 
-    fun handleMethodCall(call: MethodChannel.MethodCall, result: MethodChannel.Result) {
+    fun handleMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "playPause" -> {
                 val controller = activeController
