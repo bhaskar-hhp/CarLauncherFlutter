@@ -145,7 +145,7 @@ class _RightPanel extends StatelessWidget {
               )),
               const SizedBox(width: 8),
               Expanded(child: _QuickActionCard(
-                icon: Icons.message_outline_rounded,
+                icon: Icons.chat_bubble_outline_rounded,
                 label: 'MESSAGES',
                 color: AppColors.neonCyan,
                 onTap: () {},

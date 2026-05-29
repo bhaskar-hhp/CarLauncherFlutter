@@ -43,7 +43,7 @@ class AppTheme {
     );
   }
 
-  static List<BoxShadow> get neonGlow(Color accent) {
+  static List<BoxShadow> neonGlow(Color accent) {
     return [
       BoxShadow(color: accent.withValues(alpha: 0.3), blurRadius: 20, spreadRadius: -5),
       BoxShadow(color: accent.withValues(alpha: 0.1), blurRadius: 40, spreadRadius: -10),
@@ -73,7 +73,7 @@ class AppTheme {
     );
   }
 
-  static BoxDecoration glassCardColored(Color accent) {
+  static BoxDecoration glassCardWithAccent(Color accent) {
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topLeft,

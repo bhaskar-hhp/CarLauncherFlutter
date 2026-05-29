@@ -3,7 +3,7 @@ import '../models/media_state.dart';
 
 class MediaProvider extends ChangeNotifier {
   MediaState _state = const MediaState();
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   MediaState get state => _state;
   bool get isLoading => _isLoading;
