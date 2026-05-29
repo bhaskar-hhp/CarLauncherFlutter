@@ -5,6 +5,8 @@ class MediaState {
   final bool isPlaying;
   final String? packageName;
   final bool hasSession;
+  final bool isYtMusic;
+  final String? sourceName;
 
   const MediaState({
     this.title = '',
@@ -13,6 +15,8 @@ class MediaState {
     this.isPlaying = false,
     this.packageName,
     this.hasSession = false,
+    this.isYtMusic = false,
+    this.sourceName,
   });
 
   MediaState copyWith({
@@ -22,6 +26,8 @@ class MediaState {
     bool? isPlaying,
     String? packageName,
     bool? hasSession,
+    bool? isYtMusic,
+    String? sourceName,
   }) {
     return MediaState(
       title: title ?? this.title,
@@ -30,6 +36,8 @@ class MediaState {
       isPlaying: isPlaying ?? this.isPlaying,
       packageName: packageName ?? this.packageName,
       hasSession: hasSession ?? this.hasSession,
+      isYtMusic: isYtMusic ?? this.isYtMusic,
+      sourceName: sourceName ?? this.sourceName,
     );
   }
 }

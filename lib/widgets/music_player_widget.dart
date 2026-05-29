@@ -8,6 +8,7 @@ class MusicPlayerWidget extends StatelessWidget {
   final VoidCallback onPlayPause;
   final VoidCallback onNext;
   final VoidCallback onPrev;
+  final VoidCallback? onLaunchYtMusic;
 
   const MusicPlayerWidget({
     super.key,
@@ -15,6 +16,7 @@ class MusicPlayerWidget extends StatelessWidget {
     required this.onPlayPause,
     required this.onNext,
     required this.onPrev,
+    this.onLaunchYtMusic,
   });
 
   @override
@@ -23,31 +25,35 @@ class MusicPlayerWidget extends StatelessWidget {
 
     return GlassCard(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      accentColor: AppColors.neonPurple,
+      accentColor: hasMedia ? AppColors.neonPurple : AppColors.textDim,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              const Text(
-                'NOW PLAYING',
+              Text(
+                hasMedia ? 'NOW PLAYING' : 'MEDIA',
                 style: TextStyle(
                   fontSize: 9,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textMuted,
+                  color: hasMedia ? AppColors.textMuted : AppColors.textDim,
                   letterSpacing: 2,
                 ),
               ),
               if (hasMedia && mediaState.isPlaying)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  width: 6,
-                  height: 6,
+                  width: 6, height: 6,
                   decoration: const BoxDecoration(
-                    color: AppColors.neonGreen,
-                    shape: BoxShape.circle,
+                    color: AppColors.neonGreen, shape: BoxShape.circle,
                   ),
+                ),
+              const Spacer(),
+              if (mediaState.sourceName != null)
+                Text(
+                  mediaState.sourceName!,
+                  style: const TextStyle(fontSize: 8, color: AppColors.textDim),
                 ),
             ],
           ),
@@ -60,10 +66,10 @@ class MusicPlayerWidget extends StatelessWidget {
                   children: [
                     Text(
                       hasMedia ? mediaState.title : 'No Media Playing',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.textPrimary,
+                        color: hasMedia ? AppColors.textPrimary : AppColors.textMuted,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -73,10 +79,7 @@ class MusicPlayerWidget extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
                           mediaState.artist,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: AppColors.textSecondary,
-                          ),
+                          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -84,32 +87,52 @@ class MusicPlayerWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _MediaButton(
-                    icon: Icons.skip_previous_rounded,
-                    onTap: onPrev,
-                    enabled: hasMedia,
+              if (!hasMedia && onLaunchYtMusic != null)
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: onLaunchYtMusic,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.neonRed.withValues(alpha: 0.15),
+                        border: Border.all(color: AppColors.neonRed.withValues(alpha: 0.3)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.play_arrow_rounded, color: AppColors.neonRed, size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            'YT Music',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.neonRed.withValues(alpha: 0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 4),
-                  _MediaButton(
-                    icon: hasMedia && mediaState.isPlaying
-                        ? Icons.pause_circle_filled_rounded
-                        : Icons.play_circle_filled_rounded,
-                    onTap: onPlayPause,
-                    enabled: true,
-                    size: 40,
-                    color: hasMedia ? AppColors.neonPurple : AppColors.textMuted,
-                  ),
-                  const SizedBox(width: 4),
-                  _MediaButton(
-                    icon: Icons.skip_next_rounded,
-                    onTap: onNext,
-                    enabled: hasMedia,
-                  ),
-                ],
-              ),
+                ),
+              if (hasMedia) ...[
+                _MediaButton(Icons.skip_previous_rounded, onPrev, enabled: hasMedia),
+                const SizedBox(width: 4),
+                _MediaButton(
+                  hasMedia && mediaState.isPlaying
+                      ? Icons.pause_circle_filled_rounded
+                      : Icons.play_circle_filled_rounded,
+                  onPlayPause,
+                  enabled: true,
+                  size: 40,
+                  color: hasMedia ? AppColors.neonPurple : AppColors.textMuted,
+                ),
+                const SizedBox(width: 4),
+                _MediaButton(Icons.skip_next_rounded, onNext, enabled: hasMedia),
+              ],
             ],
           ),
         ],
@@ -125,13 +148,7 @@ class _MediaButton extends StatelessWidget {
   final double size;
   final Color? color;
 
-  const _MediaButton({
-    required this.icon,
-    required this.onTap,
-    this.enabled = true,
-    this.size = 36,
-    this.color,
-  });
+  const _MediaButton(this.icon, this.onTap, {this.enabled = true, this.size = 36, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -141,8 +158,7 @@ class _MediaButton extends StatelessWidget {
         onTap: enabled ? onTap : null,
         borderRadius: BorderRadius.circular(50),
         child: Container(
-          width: size,
-          height: size,
+          width: size, height: size,
           alignment: Alignment.center,
           child: Icon(
             icon,

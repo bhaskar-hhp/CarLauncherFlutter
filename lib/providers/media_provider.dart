@@ -30,6 +30,10 @@ class MediaProvider extends ChangeNotifier {
     await _service.skipPrevious();
   }
 
+  Future<void> launchYtMusic() async {
+    await _service.launchYtMusic();
+  }
+
   @override
   void dispose() {
     _service.dispose();

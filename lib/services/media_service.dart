@@ -22,6 +22,8 @@ class MediaService {
         albumArtUrl: data['albumArtUrl'] as String?,
         isPlaying: data['isPlaying'] as bool? ?? false,
         packageName: data['packageName'] as String?,
+        isYtMusic: data['isYtMusic'] as bool? ?? false,
+        sourceName: data['sourceName'] as String?,
       );
       onStateChanged();
     }
@@ -32,8 +34,7 @@ class MediaService {
 
   Future<bool> playPause() async {
     try {
-      final result = await _channel.invokeMethod<bool>('playPause');
-      return result ?? false;
+      return await _channel.invokeMethod<bool>('playPause') ?? false;
     } catch (_) {
       return false;
     }
@@ -41,8 +42,7 @@ class MediaService {
 
   Future<bool> skipNext() async {
     try {
-      final result = await _channel.invokeMethod<bool>('skipNext');
-      return result ?? false;
+      return await _channel.invokeMethod<bool>('skipNext') ?? false;
     } catch (_) {
       return false;
     }
@@ -50,8 +50,15 @@ class MediaService {
 
   Future<bool> skipPrevious() async {
     try {
-      final result = await _channel.invokeMethod<bool>('skipPrevious');
-      return result ?? false;
+      return await _channel.invokeMethod<bool>('skipPrevious') ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> launchYtMusic() async {
+    try {
+      return await _channel.invokeMethod<bool>('launchYtMusic') ?? false;
     } catch (_) {
       return false;
     }

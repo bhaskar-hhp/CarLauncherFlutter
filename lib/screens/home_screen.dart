@@ -109,6 +109,7 @@ class _LeftPanel extends StatelessWidget {
           onPlayPause: () => mediaProvider.playPause(),
           onNext: () => mediaProvider.next(),
           onPrev: () => mediaProvider.previous(),
+          onLaunchYtMusic: () => mediaProvider.launchYtMusic(),
         ),
         const SizedBox(height: 8),
         _QuickShortcuts(accent: accent),

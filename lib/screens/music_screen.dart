@@ -29,12 +29,20 @@ class MusicScreen extends StatelessWidget {
                   children: [
                     _AlbumArt(state.hasSession, accent),
                     const SizedBox(height: 32),
+                    if (state.sourceName != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          state.sourceName!,
+                          style: const TextStyle(fontSize: 10, color: AppColors.textDim, letterSpacing: 2, fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     Text(
                       state.hasSession ? state.title : 'No Media Playing',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.textPrimary,
+                        color: state.hasSession ? AppColors.textPrimary : AppColors.textMuted,
                         letterSpacing: 0.5,
                       ),
                       textAlign: TextAlign.center,
@@ -43,7 +51,7 @@ class MusicScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      state.hasSession ? state.artist : 'Tap play to start',
+                      state.hasSession ? state.artist : 'Open YouTube Music to play',
                       style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -52,29 +60,35 @@ class MusicScreen extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 40),
-                    _ProgressBar(),
+                    if (state.hasSession) _ProgressBar(),
                     const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _ControlButton(Icons.skip_previous_rounded, () => media.previous(), accent),
-                        const SizedBox(width: 24),
-                        _PlayButton(state.isPlaying, () => media.playPause(), accent),
-                        const SizedBox(width: 24),
-                        _ControlButton(Icons.skip_next_rounded, () => media.next(), accent),
+                        if (!state.hasSession)
+                          _LaunchYtButton(() => media.launchYtMusic(), accent)
+                        else ...[
+                          _ControlButton(Icons.skip_previous_rounded, () => media.previous(), accent),
+                          const SizedBox(width: 24),
+                          _PlayButton(state.isPlaying, () => media.playPause(), accent),
+                          const SizedBox(width: 24),
+                          _ControlButton(Icons.skip_next_rounded, () => media.next(), accent),
+                        ],
                       ],
                     ),
-                    const SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _SmallButton(Icons.shuffle_rounded, accent),
-                        const SizedBox(width: 32),
-                        _SmallButton(Icons.repeat_rounded, accent),
-                        const SizedBox(width: 32),
-                        _SmallButton(Icons.favorite_border_rounded, accent),
-                      ],
-                    ),
+                    if (state.hasSession) ...[
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _SmallButton(Icons.shuffle_rounded, accent),
+                          const SizedBox(width: 32),
+                          _SmallButton(Icons.repeat_rounded, accent),
+                          const SizedBox(width: 32),
+                          _SmallButton(Icons.favorite_border_rounded, accent),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -229,6 +243,57 @@ class MusicScreen extends StatelessWidget {
             isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
             color: Colors.white,
             size: 40,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _LaunchYtButton(VoidCallback onTap, Color accent) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              colors: [
+                AppColors.neonRed.withValues(alpha: 0.2),
+                AppColors.neonRed.withValues(alpha: 0.05),
+              ],
+            ),
+            border: Border.all(color: AppColors.neonRed.withValues(alpha: 0.3)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.play_circle_filled_rounded, color: AppColors.neonRed, size: 32),
+              const SizedBox(width: 12),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'OPEN YOUTUBE MUSIC',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Tap to launch and start playing',
+                    style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 8),
+              const Icon(Icons.arrow_forward_rounded, color: AppColors.neonRed, size: 20),
+            ],
           ),
         ),
       ),
