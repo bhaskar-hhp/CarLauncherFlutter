@@ -39,7 +39,7 @@ class MusicScreen extends StatelessWidget {
                       ),
                     Text(
                       state.hasSession ? state.title : 'No Media Playing',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
                         color: state.hasSession ? AppColors.textPrimary : AppColors.textMuted,
